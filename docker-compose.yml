@@ -1,0 +1,46 @@
+# =============================================================================
+# technitium-companion - Docker Compose for Local Development
+# =============================================================================
+#
+# Usage:
+#   docker compose up -d              # Start with pre-built image
+#   docker compose up -d --build      # Build and start
+#   docker compose logs -f            # View logs
+#   docker compose down                # Stop
+#
+# Environment variables can be set in .env file or passed directly.
+# =============================================================================
+
+services:
+  technitium-companion:
+    build: .
+    image: technitium-companion:dev
+    container_name: technitium-companion
+    restart: unless-stopped
+    environment:
+      # Technitium DNS Server connection
+      - TECHNITIUM_URL=${TECHNITIUM_URL:-http://dns.example.com:5380}
+      - TECHNITIUM_TOKEN=${TECHNITIUM_TOKEN}
+      - TECHNITIUM_ZONE=${TECHNITIUM_ZONE:-example.com}
+      # Target IP for A records (usually Swarm VIP or ingress)
+      - TARGET_IP=${TARGET_IP:-192.168.1.100}
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # Health check port
+      - HEALTH_PORT=${HEALTH_PORT:-8080}
+    volumes:
+      # Docker socket for container event monitoring
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+# Optional: Use secrets for API token (recommended for production)
+# secrets:
+#   technitium_token:
+#     file: ./secrets/technitium_token.txt

@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+
+# IDE and Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Build outputs
+technitium-companion
+*.exe
+
+# Test files
+*_test.go
+coverage.out
+coverage.html
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# CI/CD
+.gitlab-ci.yml
+.github/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.docker
+
+# Development
+.env
+.env.*
+secrets/
+tmp/
