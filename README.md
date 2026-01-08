@@ -1,12 +1,61 @@
 # technitium-companion
 
+> ## ⚠️ DEPRECATED — This project has been replaced by [dnsweaver](https://github.com/maxfield-allison/dnsweaver)
+>
+> **This repository will be removed on January 15, 2026.**
+>
+> ### Why the change?
+>
+> After releasing this project, I discovered that another project called [Technitium DNS Companion](https://github.com/Fail-Safe/Technitium-DNS-Companion) by [@Fail-Safe](https://github.com/Fail-Safe) already existed with essentially the same name. To avoid confusion in the Technitium community, I've rebranded and expanded this project into **dnsweaver**.
+>
+> ### What is dnsweaver?
+>
+> dnsweaver is the spiritual successor with expanded capabilities:
+> - **Multiple DNS providers**: Technitium, Cloudflare (Route53, Pi-hole, AdGuard Home coming soon)
+> - **Multiple sources**: Traefik labels + static config files (nginx, Caddy, HAProxy planned)
+> - **Ownership tracking**: TXT records prevent accidental deletion of manual DNS entries
+> - **Multi-provider routing**: Internal hostnames → Technitium, public hostnames → Cloudflare
+>
+> ### Migration
+>
+> dnsweaver is a drop-in replacement. Main config changes:
+> - Environment prefix: `TC_` / `TECHNITIUM_` → `DNSWEAVER_`
+> - Provider config is now named: `DNSWEAVER_{NAME}_TYPE=technitium`
+>
+> **Example migration:**
+> ```bash
+> # Old (technitium-companion)
+> TECHNITIUM_URL=http://dns:5380
+> TECHNITIUM_TOKEN=xxx
+> TECHNITIUM_ZONE=home.example.com
+> TARGET_IP=192.168.1.100
+>
+> # New (dnsweaver)
+> DNSWEAVER_TECHNITIUM_TYPE=technitium
+> DNSWEAVER_TECHNITIUM_URL=http://dns:5380
+> DNSWEAVER_TECHNITIUM_TOKEN=xxx
+> DNSWEAVER_TECHNITIUM_ZONE=home.example.com
+> DNSWEAVER_TECHNITIUM_TARGET=192.168.1.100
+> DNSWEAVER_TECHNITIUM_DOMAINS=*.home.example.com
+> DNSWEAVER_PROVIDERS=technitium
+> ```
+>
+> ### Links
+>
+> - **dnsweaver** (successor): https://github.com/maxfield-allison/dnsweaver
+> - **Technitium DNS Companion** (the "official" holder of the companion name): https://github.com/Fail-Safe/Technitium-DNS-Companion
+>
+> ---
+
 [![Release](https://img.shields.io/github/v/release/maxfield-allison/technitium-companion?style=flat-square)](https://github.com/maxfield-allison/technitium-companion/releases)
 [![License](https://img.shields.io/github/license/maxfield-allison/technitium-companion?style=flat-square)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/maxfield-allison/technitium-companion?style=flat-square)](go.mod)
 
-**Automatic DNS record management for Docker containers.**
+**⚠️ DEPRECATED — See notice above**
 
-technitium-companion watches Docker events and automatically creates and deletes DNS A records in [Technitium DNS Server](https://technitium.com/dns/) for services with Traefik labels. Built for homelabs and self-hosted environments where you want automatic DNS resolution for your containerized services.
+~~**Automatic DNS record management for Docker containers.**~~
+
+~~technitium-companion watches Docker events and automatically creates and deletes DNS A records in [Technitium DNS Server](https://technitium.com/dns/) for services with Traefik labels. Built for homelabs and self-hosted environments where you want automatic DNS resolution for your containerized services.~~
 
 ## Features
 
@@ -21,6 +70,20 @@ technitium-companion watches Docker events and automatically creates and deletes
 - **Socket Proxy Support**: Works with Docker socket proxies for enhanced security
 - **Multi-arch Images**: Supports linux/amd64 and linux/arm64
 
+## Installation
+
+### Docker Hub
+
+```bash
+docker pull maxamill/technitium-companion:latest
+```
+
+### GitHub Container Registry
+
+```bash
+docker pull ghcr.io/maxfield-allison/technitium-companion:latest
+```
+
 ## Quick Start
 
 ### Docker Compose
@@ -28,7 +91,7 @@ technitium-companion watches Docker events and automatically creates and deletes
 ```yaml
 services:
   technitium-companion:
-    image: ghcr.io/maxfield-allison/technitium-companion:latest
+    image: maxamill/technitium-companion:latest
     restart: unless-stopped
     environment:
       - TECHNITIUM_URL=http://your-technitium-server:5380
